@@ -123,19 +123,19 @@ Every step writes its result under its own id, and under `output:` when it names
 
 One key per step decides what it is.
 
-| Step         | Key                                 | What it does                                                                               |
-| ------------ | ----------------------------------- | ------------------------------------------------------------------------------------------ |
-| Agent        | `agent: <name>`                     | Runs an agent from `agents/`. `input:` lists what it is given, `output:` names its report  |
-| Script       | `script: <name>`                    | Runs a script from `scripts/`, or an inline shell command. `with:` passes named parameters |
-| Gate         | `gate: approve \| choice \| select` | Pauses for a person. See [Gates](#gates)                                                   |
-| Sub-workflow | `workflow: <name>`                  | Runs a nested package under `workflows/`                                                   |
-| Condition    | `if: <ref>`                         | Compares a reference and takes `then:` or `else:`                                          |
-| Loop         | `while: <ref>`                      | Jumps back to `goto:` while the comparison holds, up to `max_loops`                        |
-| Fan-out      | `for_each: <ref>`                   | Runs `do:` once per entry of a list, all at the same time, capped by `max_items`           |
-| Parallel     | `parallel:`                         | Runs several branches at the same time                                                     |
-| Jump         | `goto: <step id>`                   | Jumps to another step, up to `max_loops` times                                             |
-| Finish       | `finish: run`                       | Ends the run successfully. `input:` and `with:` become the run's output                    |
-| Fail         | `fail: run`                         | Ends the run as failed, with a `message:`                                                  |
+| Step         | Key                                 | What it does                                                                                                                 |
+| ------------ | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Agent        | `agent: <name>`                     | Runs an agent from `agents/`. `input:` lists what it is given, `output:` names its report                                    |
+| Script       | `script: <name>`                    | Runs a script from `scripts/`, or an inline shell command. `input:` fills its parameters in order, `with:` adds named values |
+| Gate         | `gate: approve \| choice \| select` | Pauses for a person. See [Gates](#gates)                                                                                     |
+| Sub-workflow | `workflow: <name>`                  | Runs a nested package under `workflows/`                                                                                     |
+| Condition    | `if: <ref>`                         | Compares a reference and takes `then:` or `else:`                                                                            |
+| Loop         | `while: <ref>`                      | Jumps back to `goto:` while the comparison holds, up to `max_loops`                                                          |
+| Fan-out      | `for_each: <ref>`                   | Runs `do:` once per entry of a list, all at the same time, capped by `max_items`                                             |
+| Parallel     | `parallel:`                         | Runs several branches at the same time                                                                                       |
+| Jump         | `goto: <step id>`                   | Jumps to another step, up to `max_loops` times                                                                               |
+| Finish       | `finish: run`                       | Ends the run successfully. `input:` and `with:` become the run's output                                                      |
+| Fail         | `fail: <message>`                   | Ends the run as failed; the value is the message                                                                             |
 
 Conditions and loops compare with `equals`, `not_equals`, `gte`, `lte` or `in`:
 
