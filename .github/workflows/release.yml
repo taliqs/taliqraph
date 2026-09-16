@@ -32,14 +32,6 @@ jobs:
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm build
-      # npm only attests provenance for a public repository; a private one
-      # publishes the same package without it.
-      - name: Publish
-        run: |
-          if [ "${{ github.event.repository.private }}" = "false" ]; then
-            pnpm publish --access public --no-git-checks --provenance
-          else
-            pnpm publish --access public --no-git-checks
-          fi
+      - run: pnpm publish --access public --no-git-checks --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

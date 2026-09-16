@@ -55,6 +55,15 @@ git tag v0.1.0
 git push --follow-tags
 ```
 
+Afterwards, two things that only matter once:
+
+```bash
+npm owner add taliqs taliqraph          # the org owns the package; the name stays unscoped
+npm publish --access public             # in a throwaway @taliqs/taliqraph, to hold the scoped name
+```
+
+The second one is a placeholder so nobody else can publish under your own name.
+
 ### Every release after
 
 ```bash
