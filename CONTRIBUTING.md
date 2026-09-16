@@ -51,7 +51,7 @@ lints, tests, builds and publishes to npm.
 needs the tag:
 
 ```bash
-git tag v0.1.0
+git tag -a v0.1.0 -m "v0.1.0"    # annotated: `git push --follow-tags` ignores lightweight tags
 git push --follow-tags
 ```
 
@@ -68,7 +68,7 @@ The second one is a placeholder so nobody else can publish under your own name.
 
 ```bash
 pnpm version patch      # or minor, or major: bumps package.json, commits, tags
-git push --follow-tags
+git push --follow-tags  # the tag it makes is annotated, so this pushes it
 ```
 
 Then check it landed:
