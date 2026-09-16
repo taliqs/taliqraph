@@ -34,12 +34,15 @@
     "./definitions": {
       "types": "./dist/types/definitions/index.d.ts",
       "default": "./dist/definitions.mjs"
-    }
+    },
+    "./skill/SKILL.md": "./skill/SKILL.md",
+    "./package.json": "./package.json"
   },
   "types": "./dist/types/index.d.ts",
   "files": [
     "bin",
     "dist",
+    "skill/SKILL.md",
     "README.md",
     "LICENSE",
     "NOTICE"

@@ -284,6 +284,22 @@ The report is the file at `$TQ_REPORT_FILE`, else the last JSON line on stdout. 
 
 A standard is house rules an agent is told to follow, a markdown file with `name` and optional `applies_to` globs. A skill is a reusable instruction file in the `SKILL.md` shape, `name` and `description` in frontmatter, pulled in by an agent's `skills:` list. Both are plain files under `standards/` and `skills/`.
 
+### The authoring skill
+
+The package ships one: `skill/SKILL.md`, a reference to this format written for a model to read. Hand it to whatever agent you want writing workflows.
+
+```bash
+# Claude Code, for every project on this machine
+mkdir -p ~/.claude/skills/taliqraph-workflows
+cp "$(npm root -g)/taliqraph/skill/SKILL.md" ~/.claude/skills/taliqraph-workflows/
+
+# or into a package, for that package's own agents
+mkdir -p my-workflow/skills/taliqraph-workflows
+cp "$(npm root -g)/taliqraph/skill/SKILL.md" my-workflow/skills/taliqraph-workflows/
+```
+
+It is checked on every build: the file has to parse as a skill, and the workflows and agents it shows have to parse as workflows and agents, so a key that gets renamed here cannot keep teaching the old name.
+
 ## The CLI
 
 ```bash
