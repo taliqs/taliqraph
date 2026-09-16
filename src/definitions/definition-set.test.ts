@@ -5,7 +5,7 @@ import { buildDefinitionSet, packageScope } from './definition-set';
 const agentSource = (name: string, description: string): string => `---
 name: ${name}
 description: ${description}
-engine: claude-code
+engine: anthropic
 model: sonnet-5
 effort: med
 tools:
@@ -119,7 +119,7 @@ steps:
 
 describe('workflow packages', () => {
   const agent = (name: string) =>
-    `---\nname: ${name}\ndescription: ${name}\nengine: claude-code\nmodel: sonnet-5\neffort: low\ntools:\n  read: always\n  write: off\n  commands: off\n---\nPrompt ${name}.\n`;
+    `---\nname: ${name}\ndescription: ${name}\nengine: anthropic\nmodel: sonnet-5\neffort: low\ntools:\n  read: always\n  write: off\n  commands: off\n---\nPrompt ${name}.\n`;
   const workflow = (name: string, agentName: string, nested?: string) =>
     `name: ${name}\ntitle: ${name}\nsteps:\n  - id: look\n    agent: ${agentName}\n${nested ? `  - id: sub\n    workflow: ${nested}\n` : ''}`;
 

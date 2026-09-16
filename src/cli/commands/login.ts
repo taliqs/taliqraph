@@ -16,22 +16,20 @@ interface LoginCommand {
 function loginCommandFor(engineId: string): LoginCommand {
   switch (engineId) {
     case 'claude':
-    case 'claude-code':
+    case 'anthropic':
       return { command: 'claude', args: ['/login'] };
-    case 'codex':
-      return { command: 'codex', args: ['login'] };
     default:
-      throw new Error(`No login flow is wired for engine '${engineId}' (claude-code, codex)`);
+      throw new Error(`No login flow is wired for engine '${engineId}' (anthropic)`);
   }
 }
 
 export function registerLoginCommand(program: Command, globals: () => GlobalOptions): void {
   program
     .command('login [engine]')
-    .description("run an engine's login in this terminal (claude-code by default, or codex)")
+    .description("run an engine's login in this terminal (anthropic by default)")
     .action((engine: string | undefined) =>
       withCli(globals(), async () => {
-        const { command, args } = loginCommandFor(engine ?? 'claude-code');
+        const { command, args } = loginCommandFor(engine ?? 'anthropic');
         // A neutral cwd: logins are account-level and must not register your project as a workspace.
         const cwd = join(tmpdir(), 'taliqraph-login');
         await mkdir(cwd, { recursive: true });

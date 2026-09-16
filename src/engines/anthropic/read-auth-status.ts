@@ -10,7 +10,7 @@ import type { EngineAuthStatus } from '../engine-adapter';
  *   tell "signed in" from "signed in once, session now dead".
  * An ANTHROPIC_API_KEY also counts. The login itself runs in the terminal.
  */
-export async function readClaudeAuthStatus(
+export async function readAuthStatus(
   configFilePath: string,
   credentialsFilePath: string = join(dirname(configFilePath), '.claude', '.credentials.json'),
   now: () => number = Date.now,

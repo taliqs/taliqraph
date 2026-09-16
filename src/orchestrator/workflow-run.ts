@@ -1018,7 +1018,7 @@ export class WorkflowRun {
   /**
    * A usage/rate limit ends the run the same way a crash does (cancelled, then
    * Resume) rather than as a failure: retrying immediately is futile, and
-   * every other Claude/Codex-backed branch would hit the same wall, so this
+   * every other branch on the same engine would hit the same wall, so this
    * always wins over a fork's on_fail policy. Resume replays the event log and
    * re-runs the interrupted step, exactly like restarting after a crash.
    */

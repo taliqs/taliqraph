@@ -3,16 +3,16 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { EngineEvent } from '../engine-event';
-import { ClaudeCodeEngine } from './claude-code-engine';
+import { AnthropicEngine } from './anthropic-engine';
 
 // Live test against the real Claude Code SDK + the machine's own login.
 // Run with: TQ_E2E_CLAUDE=1 pnpm test
 const LIVE = process.env['TQ_E2E_CLAUDE'] === '1';
 
-describe.runIf(LIVE)('ClaudeCodeEngine (live)', () => {
+describe.runIf(LIVE)('AnthropicEngine (live)', () => {
   it('writes a file inside the workspace and reports real usage', async () => {
     const workspace = await mkdtemp(join(tmpdir(), 'tq-claude-e2e-'));
-    const engine = new ClaudeCodeEngine();
+    const engine = new AnthropicEngine();
     const session = engine.startSession({
       systemPrompt:
         'You are a precise assistant. Do exactly what is asked using your tools, then stop.',

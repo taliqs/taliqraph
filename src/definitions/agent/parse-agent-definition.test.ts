@@ -4,7 +4,7 @@ import { parseAgentDefinition } from './parse-agent-definition';
 const validAgent = `---
 name: software-engineer
 description: Implements planned changes.
-engine: claude-code
+engine: anthropic
 model: sonnet-5
 effort: high
 tools:
@@ -40,7 +40,7 @@ describe('parseAgentDefinition', () => {
     const minimal = `---
 name: investigator
 description: Read-only detective.
-engine: claude-code
+engine: anthropic
 model: sonnet-5
 ---
 You investigate. You never edit.

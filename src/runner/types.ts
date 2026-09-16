@@ -28,7 +28,7 @@ export interface RunWorkflowOptions {
   readonly isolated?: boolean;
   /** Shell commands to run in the workspace after each top-level step and after the run. */
   readonly hooks?: HooksConfig;
-  /** Default: the Claude Code and Codex engines. */
+  /** Default: the Anthropic engine. */
   readonly engines?: EngineRegistry;
   /** Resolved MCP servers the agents may name; default none. */
   readonly mcpServers?: readonly McpServerSpec[];

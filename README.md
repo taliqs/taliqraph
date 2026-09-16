@@ -9,7 +9,7 @@ npm i -g taliqraph
 taliqraph ./my-workflow --input question="what does this folder do"
 ```
 
-Node 22 or newer. The engines are your own installs and sign-ins: [Claude Code](https://claude.com/claude-code) or [Codex](https://developers.openai.com/codex/cli).
+Node 22 or newer. The engine is your own install and sign-in: [Claude Code](https://claude.com/claude-code), which the runner drives as the `anthropic` engine.
 
 ## Contents
 
@@ -228,7 +228,7 @@ An agent is a markdown file: frontmatter for the model and its permissions, body
 ---
 name: reviewer
 description: Reviews a diff for real bugs.
-engine: claude-code
+engine: anthropic
 model: sonnet-5
 effort: high
 tools:
@@ -291,7 +291,7 @@ taliqraph <workflow> [options]     # run it; the workflow is a folder or a .tqh 
 taliqraph lint [target]            # the checks a run makes, without running
 taliqraph pack <folder>            # a package as one .tqh file
 taliqraph unpack <file>            # a .tqh file back into a folder
-taliqraph login [engine]           # the engine's own sign-in, in this terminal
+taliqraph login                    # the engine's own sign-in, in this terminal
 taliqraph doctor                   # engines, sign-ins, node
 ```
 
@@ -358,22 +358,22 @@ console.log(result.status, result.summary);
 console.log(result.metrics.costUsd, result.metrics.tokens.total);
 ```
 
-| Option       | Default               | What it is                                                               |
-| ------------ | --------------------- | ------------------------------------------------------------------------ |
-| `workflow`   | required              | a package folder or a `.tqh` file                                        |
-| `inputs`     | `{}`                  | values for the inputs the workflow declares                              |
-| `secrets`    | the environment       | values for the secrets it declares                                       |
-| `env`        | the environment       | host variables for its `env:` pass-through                               |
-| `cwd`        | the process cwd       | the folder the run works in                                              |
-| `isolated`   | false                 | true when `cwd` is a copy you made, so agents are told to stay inside it |
-| `hooks`      | none                  | `{ afterStep, afterTask }` shell commands run in the workspace           |
-| `engines`    | Claude Code and Codex | the engine registry to use                                               |
-| `mcpServers` | none                  | resolved MCP servers the agents may name                                 |
-| `onEvent`    | none                  | every event as it happens, timestamped                                   |
-| `onGate`     | none                  | answers every pause                                                      |
-| `headless`   | false                 | answer every pause automatically, the way `-p` does                      |
-| `signal`     | none                  | aborting cancels the run                                                 |
-| `resumeFrom` | none                  | the events of an earlier run, to continue it                             |
+| Option       | Default              | What it is                                                               |
+| ------------ | -------------------- | ------------------------------------------------------------------------ |
+| `workflow`   | required             | a package folder or a `.tqh` file                                        |
+| `inputs`     | `{}`                 | values for the inputs the workflow declares                              |
+| `secrets`    | the environment      | values for the secrets it declares                                       |
+| `env`        | the environment      | host variables for its `env:` pass-through                               |
+| `cwd`        | the process cwd      | the folder the run works in                                              |
+| `isolated`   | false                | true when `cwd` is a copy you made, so agents are told to stay inside it |
+| `hooks`      | none                 | `{ afterStep, afterTask }` shell commands run in the workspace           |
+| `engines`    | the Anthropic engine | the engine registry to use                                               |
+| `mcpServers` | none                 | resolved MCP servers the agents may name                                 |
+| `onEvent`    | none                 | every event as it happens, timestamped                                   |
+| `onGate`     | none                 | answers every pause                                                      |
+| `headless`   | false                | answer every pause automatically, the way `-p` does                      |
+| `signal`     | none                 | aborting cancels the run                                                 |
+| `resumeFrom` | none                 | the events of an earlier run, to continue it                             |
 
 The result:
 
@@ -461,4 +461,4 @@ Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Apache License 2.0. See [LICENSE](LICENSE).
 
-Taliqraph runs workflows with engines you install and sign in to yourself. The Claude engine uses Anthropic's Claude Agent SDK, which carries Anthropic's own terms; the Codex engine drives the `codex` CLI.
+Taliqraph runs workflows with engines you install and sign in to yourself. The `anthropic` engine uses Anthropic's Claude Agent SDK, which carries Anthropic's own terms.

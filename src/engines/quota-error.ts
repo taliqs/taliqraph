@@ -34,7 +34,7 @@ const RETRY_AFTER = /(?:try again|retry)(?:\s+\w+)?\s+in\s+(\d+)\s*(second|minut
 /**
  * Heuristic classification of an engine error message as a quota/rate-limit
  * condition (not the workflow's fault, resolves itself) vs. a real failure.
- * Neither the Claude Agent SDK (a CLI subprocess) nor the Codex CLI expose a
+ * The Claude Agent SDK (a CLI subprocess) does not expose a
  * typed error with a machine-readable retry time, so this is pattern
  * matching on the human-readable text engines actually produce.
  */

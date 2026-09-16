@@ -13,7 +13,7 @@ import type { EngineEvent } from '../engine-event';
 import { AsyncQueue } from '../utils/async-queue';
 import { CLAUDE_MODELS, resolveClaudeModelId } from './claude-models';
 import { effortToThinkingTokens } from './effort-to-thinking-tokens';
-import { readClaudeAuthStatus } from './read-claude-auth-status';
+import { readAuthStatus } from './read-auth-status';
 import { errorEventOf } from '../quota-error';
 import { decideToolPermission } from './tool-permission-policy';
 import { translateSdkMessage } from './translate-sdk-message';
@@ -23,7 +23,7 @@ export type ClaudeQueryFn = (args: {
   options: Record<string, unknown>;
 }) => AsyncIterable<unknown>;
 
-export interface ClaudeCodeEngineOptions {
+export interface AnthropicEngineOptions {
   /** Injectable for tests; defaults to the Claude Agent SDK's query(). */
   readonly queryFn?: ClaudeQueryFn;
   readonly authConfigFilePath?: string;
@@ -37,13 +37,13 @@ async function* sdkQuery(args: {
   yield* query(args as never) as AsyncIterable<unknown>;
 }
 
-export class ClaudeCodeEngine implements EngineAdapter {
-  readonly id = 'claude-code';
-  readonly label = 'Claude Code';
+export class AnthropicEngine implements EngineAdapter {
+  readonly id = 'anthropic';
+  readonly label = 'Anthropic';
   private readonly queryFn: ClaudeQueryFn;
   private readonly authConfigFilePath: string;
 
-  constructor(options: ClaudeCodeEngineOptions = {}) {
+  constructor(options: AnthropicEngineOptions = {}) {
     this.queryFn = options.queryFn ?? sdkQuery;
     this.authConfigFilePath = options.authConfigFilePath ?? join(homedir(), '.claude.json');
   }
@@ -59,7 +59,7 @@ export class ClaudeCodeEngine implements EngineAdapter {
   }
 
   authStatus(): Promise<EngineAuthStatus> {
-    return readClaudeAuthStatus(this.authConfigFilePath);
+    return readAuthStatus(this.authConfigFilePath);
   }
 
   startSession(spec: EngineRunSpec): EngineSession {

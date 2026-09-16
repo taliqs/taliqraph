@@ -6,7 +6,7 @@ import { serializeAgentDefinition } from './serialize-agent-definition';
 const richAgent: AgentDefinition = {
   name: 'investigator',
   description: 'Read-only detective: traces bugs before anyone edits.',
-  engine: 'claude-code',
+  engine: 'anthropic',
   model: 'sonnet-5',
   effort: 'med',
   tools: {
@@ -26,7 +26,7 @@ const richAgent: AgentDefinition = {
 const minimalAgent: AgentDefinition = {
   name: 'helper',
   description: 'Small helper.',
-  engine: 'claude-code',
+  engine: 'anthropic',
   model: 'haiku',
   effort: 'low',
   tools: {
@@ -80,7 +80,7 @@ it('round-trips an mcp server allowlist through frontmatter', () => {
   const source = serializeAgentDefinition({
     name: 'researcher',
     description: 'Explores with MCP tools.',
-    engine: 'claude-code',
+    engine: 'anthropic',
     model: 'sonnet-5',
     effort: 'med',
     tools: {

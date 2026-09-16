@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { EngineEvent } from '../engine-event';
 import type { EngineRunSpec } from '../engine-adapter';
-import type { ClaudeQueryFn } from './claude-code-engine';
-import { ClaudeCodeEngine } from './claude-code-engine';
+import type { ClaudeQueryFn } from './anthropic-engine';
+import { AnthropicEngine } from './anthropic-engine';
 
 const spec: EngineRunSpec = {
   systemPrompt: 'You are a test engineer.',
@@ -38,10 +38,10 @@ async function collect(events: AsyncIterable<EngineEvent>): Promise<EngineEvent[
   return collected;
 }
 
-describe('ClaudeCodeEngine', () => {
+describe('AnthropicEngine', () => {
   it('maps the run spec onto SDK options', async () => {
     const { fn, captured } = fakeQuery([{ type: 'result', subtype: 'success', result: '' }]);
-    const session = new ClaudeCodeEngine({ queryFn: fn }).startSession(spec);
+    const session = new AnthropicEngine({ queryFn: fn }).startSession(spec);
     await collect(session.events());
 
     const options = captured[0]?.options ?? {};
@@ -62,14 +62,14 @@ describe('ClaudeCodeEngine', () => {
         usage: { input_tokens: 10, output_tokens: 4 },
       },
     ]);
-    const session = new ClaudeCodeEngine({ queryFn: fn }).startSession(spec);
+    const session = new AnthropicEngine({ queryFn: fn }).startSession(spec);
     const events = await collect(session.events());
     expect(events.map((event) => event.type)).toEqual(['text-delta', 'usage', 'done']);
   });
 
   it('enforces the tool policy through canUseTool', async () => {
     const { fn, captured } = fakeQuery([{ type: 'result', subtype: 'success', result: '' }]);
-    const session = new ClaudeCodeEngine({ queryFn: fn }).startSession(spec);
+    const session = new AnthropicEngine({ queryFn: fn }).startSession(spec);
     await collect(session.events());
 
     const canUseTool = captured[0]?.options['canUseTool'] as (
@@ -89,7 +89,7 @@ describe('ClaudeCodeEngine', () => {
 
   it('feeds the initial user message and later send() calls into the prompt stream', async () => {
     const { fn, captured } = fakeQuery([{ type: 'result', subtype: 'success', result: '' }]);
-    const session = new ClaudeCodeEngine({ queryFn: fn }).startSession(spec);
+    const session = new AnthropicEngine({ queryFn: fn }).startSession(spec);
     session.send('Also update the changelog.');
     await collect(session.events());
 
@@ -110,7 +110,7 @@ describe('ClaudeCodeEngine', () => {
         yield { type: 'system', subtype: 'init' };
         throw new Error('CLI exploded');
       })();
-    const session = new ClaudeCodeEngine({ queryFn: fn }).startSession(spec);
+    const session = new AnthropicEngine({ queryFn: fn }).startSession(spec);
     const events = await collect(session.events());
     expect(events).toEqual([{ type: 'error', message: 'CLI exploded' }]);
   });
@@ -126,7 +126,7 @@ describe('session environment', () => {
         captured.push(args as { options: Record<string, unknown> });
         return (async function* () {})();
       };
-      const session = new ClaudeCodeEngine({ queryFn: fn }).startSession({
+      const session = new AnthropicEngine({ queryFn: fn }).startSession({
         systemPrompt: 'x',
         userMessage: 'y',
         model: 'sonnet-5',

@@ -5,7 +5,7 @@ import { outsidePackageReferences } from './package-references';
 describe('outsidePackageReferences', () => {
   it('names what a package reaches for outside itself, and where that lives', () => {
     const agent = (name: string) =>
-      `---\nname: ${name}\ndescription: ${name}\nengine: claude-code\nmodel: sonnet-5\neffort: low\ntools:\n  read: always\n  write: off\n  commands: off\n---\nPrompt ${name}.\n`;
+      `---\nname: ${name}\ndescription: ${name}\nengine: anthropic\nmodel: sonnet-5\neffort: low\ntools:\n  read: always\n  write: off\n  commands: off\n---\nPrompt ${name}.\n`;
     const set = buildDefinitionSet([
       {
         kind: 'agent',

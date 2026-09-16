@@ -4,8 +4,7 @@
  * build its own stateful layer on top.
  */
 export * from './definitions/index';
-export { ClaudeCodeEngine } from './engines/claude/claude-code-engine';
-export { CodexEngine } from './engines/codex/codex-engine';
+export { AnthropicEngine } from './engines/anthropic/anthropic-engine';
 export { createDefaultEngines } from './engines/default-engines';
 export type {
   EngineAdapter,
