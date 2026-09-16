@@ -29,19 +29,43 @@ it, under this project's licence.
 
 ## Releasing
 
-The tag is the release. One command bumps the version, commits it and tags it:
+The tag is the release. Pushing a `v*` tag runs the release workflow, which
+refuses to publish when the tag and `package.json` disagree, then typechecks,
+lints, tests, builds and publishes to npm.
+
+### Once, before the first release
+
+1. **An npm token.** On npmjs.com: _Access Tokens → Generate New Token →
+   Classic → Automation_. A classic automation token can publish a package that
+   does not exist yet and skips the 2FA prompt, which a CI run cannot answer. A
+   granular token works too, but only after the package exists, so it is the
+   token to switch to later.
+2. **The token as a repository secret.** On GitHub: _Settings → Secrets and
+   variables → Actions → New repository secret_, named `NPM_TOKEN`.
+3. Nothing else. The package name, licence and files are already set, and
+   `pnpm build` runs in the workflow.
+
+### The first release
+
+`package.json` already says `0.1.0` and nothing has been published, so it only
+needs the tag:
 
 ```bash
-pnpm version patch      # or minor, or major
+git tag v0.1.0
 git push --follow-tags
 ```
 
-The push of a `v*` tag runs the release workflow, which refuses to publish if
-the tag and `package.json` disagree, then typechecks, lints, tests, builds and
-publishes to npm. The first release is the version already in `package.json`:
+### Every release after
 
 ```bash
-git tag v0.1.0 && git push --follow-tags
+pnpm version patch      # or minor, or major: bumps package.json, commits, tags
+git push --follow-tags
+```
+
+Then check it landed:
+
+```bash
+npm view taliqraph version
 ```
 
 ## Licence
