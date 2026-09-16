@@ -1,9 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { parseSkillDefinition } from '../src/definitions/skill/parse-skill-definition';
-import { parseWorkflowDefinition } from '../src/definitions/workflow/parse-workflow-definition';
-import { parseAgentDefinition } from '../src/definitions/agent/parse-agent-definition';
+import { parseSkillDefinition } from './parse-skill-definition';
+import { parseWorkflowDefinition } from '../workflow/parse-workflow-definition';
+import { parseAgentDefinition } from '../agent/parse-agent-definition';
 
 /**
  * The skill ships in the package, so it is documentation the runner can check on
@@ -11,7 +11,10 @@ import { parseAgentDefinition } from '../src/definitions/agent/parse-agent-defin
  * to be things this parser accepts. A key that gets renamed here fails the build
  * rather than teaching someone the old name.
  */
-const source = readFileSync(join(import.meta.dirname, 'SKILL.md'), 'utf8');
+const source = readFileSync(
+  join(import.meta.dirname, '..', '..', '..', 'skill', 'SKILL.md'),
+  'utf8',
+);
 
 /** Every fenced block of `lang`, in order. */
 function blocks(lang: string): string[] {

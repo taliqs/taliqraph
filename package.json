@@ -42,7 +42,7 @@
   "files": [
     "bin",
     "dist",
-    "skill/SKILL.md",
+    "skill",
     "README.md",
     "LICENSE",
     "NOTICE"
