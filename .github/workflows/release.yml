@@ -16,10 +16,30 @@ jobs:
           node-version: 22
           cache: pnpm
           registry-url: https://registry.npmjs.org
+      # The tag is the release, so it has to agree with what would be published.
+      - name: Check the tag against the version
+        run: |
+          tagged="${GITHUB_REF_NAME#v}"
+          packaged="$(node -p "require('./package.json').version")"
+          if [ "$tagged" != "$packaged" ]; then
+            echo "tag $GITHUB_REF_NAME says $tagged, package.json says $packaged" >&2
+            echo "run: pnpm version <patch|minor|major> && git push --follow-tags" >&2
+            exit 1
+          fi
+          echo "releasing $packaged"
       - run: pnpm install --frozen-lockfile --ignore-scripts
       - run: pnpm typecheck
+      - run: pnpm lint
       - run: pnpm test
       - run: pnpm build
-      - run: pnpm publish --access public --no-git-checks --provenance
+      # npm only attests provenance for a public repository; a private one
+      # publishes the same package without it.
+      - name: Publish
+        run: |
+          if [ "${{ github.event.repository.private }}" = "false" ]; then
+            pnpm publish --access public --no-git-checks --provenance
+          else
+            pnpm publish --access public --no-git-checks
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

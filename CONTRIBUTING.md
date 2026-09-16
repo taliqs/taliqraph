@@ -27,6 +27,23 @@ Signed-off-by: Your Name <you@example.com>
 By signing off you state that you wrote the change, or have the right to submit
 it, under this project's licence.
 
+## Releasing
+
+The tag is the release. One command bumps the version, commits it and tags it:
+
+```bash
+pnpm version patch      # or minor, or major
+git push --follow-tags
+```
+
+The push of a `v*` tag runs the release workflow, which refuses to publish if
+the tag and `package.json` disagree, then typechecks, lints, tests, builds and
+publishes to npm. The first release is the version already in `package.json`:
+
+```bash
+git tag v0.1.0 && git push --follow-tags
+```
+
 ## Licence
 
 Contributions are accepted under the Apache License 2.0, the same licence that
