@@ -27,7 +27,6 @@ export function serializeAgentDefinition(agent: AgentDefinition): string {
     effort: agent.effort,
     tools,
     ...(agent.skills && agent.skills.length > 0 ? { skills: [...agent.skills] } : {}),
-    ...(agent.outputSchema ? { output_schema: agent.outputSchema } : {}),
   };
 
   const yaml = stringifyYaml(frontmatter, { lineWidth: 0 }).trimEnd();

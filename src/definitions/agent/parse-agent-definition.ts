@@ -88,7 +88,6 @@ function toAgentDefinition(
     effort: frontmatter.effort,
     tools: toToolPolicy(frontmatter.tools),
     ...(frontmatter.skills.length > 0 ? { skills: frontmatter.skills } : {}),
-    ...(frontmatter.output_schema ? { outputSchema: frontmatter.output_schema } : {}),
     scope,
     prompt,
     ...(reportExample ? { reportExample } : {}),

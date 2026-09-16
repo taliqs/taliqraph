@@ -15,8 +15,6 @@ tools:
   network: off
   github: read
   jira: off
-output_schema: engineer-report
-match: [implement, build]
 ---
 You are the implementing engineer.
 Keep every change sized for one reviewable PR.
@@ -30,7 +28,6 @@ describe('parseAgentDefinition', () => {
 
     expect(result.value.name).toBe('software-engineer');
     expect(result.value.effort).toBe('high');
-    expect(result.value.outputSchema).toBe('engineer-report');
     expect(result.value.scope).toBe('global');
     expect(result.value.prompt).toContain('implementing engineer');
     expect(result.value.tools.commandAllowlist).toEqual(['npm test', 'npm run build']);
@@ -58,7 +55,34 @@ You investigate. You never edit.
       network: 'off',
       mcp: [],
     });
-    expect(result.value.outputSchema).toBeUndefined();
+  });
+
+  it('ignores a frontmatter key it does not know, rather than rejecting the file', () => {
+    const withUnknownKeys = `---
+name: investigator
+description: Read-only detective.
+engine: anthropic
+model: sonnet-5
+output_schema: findings-report
+match: [investigate, trace]
+some_future_key: whatever
+---
+You investigate. You never edit.
+`;
+    const result = parseAgentDefinition(withUnknownKeys, 'project');
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+
+    expect(Object.keys(result.value).sort()).toEqual([
+      'description',
+      'effort',
+      'engine',
+      'model',
+      'name',
+      'prompt',
+      'scope',
+      'tools',
+    ]);
   });
 
   it('rejects a file without frontmatter', () => {

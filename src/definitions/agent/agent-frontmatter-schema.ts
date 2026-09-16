@@ -21,8 +21,6 @@ export const agentFrontmatterSchema = z.object({
   effort: z.enum(EFFORT_LEVELS).default('med'),
   tools: toolsSchema,
   skills: z.array(z.string()).default([]),
-  output_schema: z.string().min(1).optional(),
-  match: z.array(z.string()).default([]),
 });
 
 export type AgentFrontmatter = z.infer<typeof agentFrontmatterSchema>;

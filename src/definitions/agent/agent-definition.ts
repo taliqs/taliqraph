@@ -20,7 +20,6 @@ export interface AgentDefinition {
   readonly model: string;
   readonly effort: EffortLevel;
   readonly tools: ToolPolicy;
-  readonly outputSchema?: string;
   readonly scope: DefinitionScope;
   /** Behavioral instructions only; the report contract lives in reportExample. */
   readonly prompt: string;

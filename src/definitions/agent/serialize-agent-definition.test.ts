@@ -17,7 +17,6 @@ const richAgent: AgentDefinition = {
     network: 'off',
     mcp: [],
   },
-  outputSchema: 'findings-report',
   scope: 'global',
   prompt: 'You investigate - you never edit files.\n\n- Find the root cause.',
   reportExample: '{\n  "summary": "one paragraph",\n  "rootCause": "file:line"\n}',
@@ -52,8 +51,6 @@ describe('serializeAgentDefinition', () => {
 
   it('roundtrips a minimal definition and omits empty optional fields', () => {
     const source = serializeAgentDefinition(minimalAgent);
-    expect(source).not.toContain('match:');
-    expect(source).not.toContain('output_schema:');
     expect(source).not.toContain('allowlist:');
     expect(source).not.toContain('## Report');
     const parsed = parseAgentDefinition(source, 'global');
