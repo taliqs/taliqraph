@@ -298,8 +298,6 @@ mkdir -p my-workflow/skills/taliqraph-workflows
 cp "$(npm root -g)/taliqraph/skill/SKILL.md" my-workflow/skills/taliqraph-workflows/
 ```
 
-It is checked on every build: the file has to parse as a skill, and the workflows and agents it shows have to parse as workflows and agents, so a key that gets renamed here cannot keep teaching the old name.
-
 ## The CLI
 
 ```bash
