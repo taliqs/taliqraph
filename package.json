@@ -1,0 +1,79 @@
+{
+  "name": "taliqraph",
+  "version": "0.1.0",
+  "description": "Run workflows made of AI agents, scripts and approval gates, defined as plain files. A CLI and a programmatic API.",
+  "keywords": [
+    "ai",
+    "agents",
+    "workflow",
+    "claude-code",
+    "codex",
+    "automation",
+    "cli"
+  ],
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/taliqs/taliqraph",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taliqs/taliqraph.git"
+  },
+  "bugs": "https://github.com/taliqs/taliqraph/issues",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "taliqraph": "./bin/taliqraph.mjs",
+    "tq": "./bin/taliqraph.mjs"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/index.mjs"
+    },
+    "./definitions": {
+      "types": "./dist/types/definitions/index.d.ts",
+      "default": "./dist/definitions.mjs"
+    }
+  },
+  "types": "./dist/types/index.d.ts",
+  "files": [
+    "bin",
+    "dist",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "build": "tsup && node scripts/build-types.mjs",
+    "prepack": "pnpm build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm build"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.3.252",
+    "commander": "^13.1.0",
+    "yaml": "2.7.0",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "@types/node": "^22.13.1",
+    "eslint": "^9.20.0",
+    "prettier": "^3.4.2",
+    "tsup": "^8.5.1",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.24.0",
+    "vitest": "^3.0.5"
+  },
+  "packageManager": "pnpm@10.34.5",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}
