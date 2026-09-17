@@ -119,6 +119,10 @@ my-workflow/
 
 Every step writes its result under its own id, and under `output:` when it names one. Later steps read them as references: `reviewer`, `reviewer.findings`, `inputs.question`, `$listing.summary` inside a `with:` block.
 
+A fork's results survive it: every branch of a `parallel:` runs, so a later step reads any branch's output, and a `for_each` collects its runs into `<step>.results`. A condition's branches are the exception - one of them did not happen, so nothing after the fork can read them.
+
+Every reference is checked before a run. A name nothing produces is an error; a field outside the producer's report skeleton is a warning, because it arrives as "(not available)" rather than failing. That check only works where a skeleton exists, which is the reason to declare one on every agent and script.
+
 ## Steps
 
 One key per step decides what it is.
