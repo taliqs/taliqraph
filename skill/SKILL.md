@@ -190,7 +190,7 @@ a branch holding one `goto`, and the editor expands it into that when it saves.
   max_items: 20 # at most 50
   on_fail: continue
   do:
-    agent: scorer
+    agent: scorer # an agent, and only an agent - not a script or a sub-workflow
     input: [finding]
 
 - id: both
@@ -202,6 +202,10 @@ a branch holding one `goto`, and the editor expands it into that when it saves.
         agent: summarizer
         input: [test]
 ```
+
+`do:` runs **one agent** per entry. A script or a nested `workflow:` there is
+rejected at parse time, so the batch-driver shape - fan a sub-workflow out over a
+list - is not available; drive it from outside instead.
 
 **A fork's results are readable after it joins.** Every branch of a `parallel:`
 always runs, so a step after it reads any branch's `output:` (or a branch step's
@@ -402,9 +406,11 @@ to write by accident.
   neither.
 - **A script's parameters come from `input:`, in order.** See above; this is the
   one that silently produces a step with no data.
-- **Every reference is checked**, including inside `with:`. A field no step
-  declares is an error, which is why report skeletons are not optional in
-  practice.
+- **Every reference is checked**, including inside `with:`, a gate's `list:` and
+  a `for_each:` path. A name nothing produces is an error. A _field_ the
+  producer's skeleton does not declare is a warning, `ref/not-in-skeleton`,
+  because it arrives as "(not available)" rather than failing the run - which is
+  why a report skeleton is what makes those checks work at all.
 
 ## Running it
 

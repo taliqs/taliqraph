@@ -131,7 +131,7 @@ One key per step decides what it is.
 | Sub-workflow | `workflow: <name>`                  | Runs a nested package under `workflows/`                                                                                     |
 | Condition    | `if: <ref>`                         | Compares a reference and takes `then:` or `else:`                                                                            |
 | Loop         | `while: <ref>`                      | Jumps back to `goto:` while the comparison holds, up to `max_loops`                                                          |
-| Fan-out      | `for_each: <ref>`                   | Runs `do:` once per entry of a list, all at the same time, capped by `max_items`                                             |
+| Fan-out      | `for_each: <ref>`                   | Runs one agent (`do:`) per entry of a list, all at the same time, capped by `max_items`                                      |
 | Parallel     | `parallel:`                         | Runs several branches at the same time                                                                                       |
 | Jump         | `goto: <step id>`                   | Jumps to another step, up to `max_loops` times                                                                               |
 | Finish       | `finish: run`                       | Ends the run successfully. `input:` and `with:` become the run's output                                                      |

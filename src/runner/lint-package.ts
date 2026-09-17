@@ -49,6 +49,11 @@ export function lintLoadedPackage(
     agentNames: [...scope.agents.keys()],
     workflowNames: [...scope.workflows.keys()],
     scripts: [...scope.scripts.values()],
+    // Without these every `<step>.<field>` passes, because the linter has no
+    // shape to hold it against - the field checks only work if it knows what
+    // each agent and script says it reports.
+    agentReports: reportsOf(scope.agents.values()),
+    scriptReports: reportsOf(scope.scripts.values()),
   });
   const missingMcp = requiredMcpServers(
     workflow,
@@ -56,4 +61,17 @@ export function lintLoadedPackage(
     (child) => scope.workflows.get(child),
   ).filter((requirement) => !requirement.optional && !configuredMcp.includes(requirement.name));
   return { name, workflow, scope, lint, missingMcp, problems };
+}
+
+/** Name → report skeleton, for the definitions that declare one. */
+function reportsOf(
+  definitions: Iterable<{ readonly name: string; readonly reportExample?: string }>,
+): Record<string, string> {
+  const reports: Record<string, string> = {};
+  for (const definition of definitions) {
+    if (definition.reportExample) {
+      reports[definition.name] = definition.reportExample;
+    }
+  }
+  return reports;
 }
