@@ -161,6 +161,11 @@ Keys that ride along on a step, whatever it is:
 
 Comparisons are `equals`, `not_equals`, `gte`, `lte` and `in`.
 
+A condition is two branches, and each is a list of steps. To jump somewhere from
+one side, put a `goto` step in it - there is nothing else to learn, and the
+editor draws both sides as lanes you can fill. `then: <step id>` is shorthand for
+a branch holding one `goto`, and the editor expands it into that when it saves.
+
 ```yaml
 - id: route
   if: review.blocking
@@ -169,7 +174,9 @@ Comparisons are `equals`, `not_equals`, `gte`, `lte` and `in`.
     - id: fix
       agent: engineer
       input: [review]
-  else: post # a step id, or a list of steps
+  else:
+    - id: skip-ahead
+      goto: post
 
 - id: retry
   while: tests.failed
@@ -195,6 +202,13 @@ Comparisons are `equals`, `not_equals`, `gte`, `lte` and `in`.
         agent: summarizer
         input: [test]
 ```
+
+**A fork's results are readable after it joins.** Every branch of a `parallel:`
+always runs, so a step after it reads any branch's `output:` (or a branch step's
+own id) like anything else. A `for_each` collects its runs into
+`<step>.results` - reference that, not the inner `output:` name, which belongs to
+one item's run. Only a condition's branches are invisible afterwards, because one
+of them did not happen.
 
 `then:` and `else:` take a step id or a list of steps, and either may be left out:
 an else-only condition does extra work on false and otherwise carries on.
@@ -374,11 +388,10 @@ taliqraph ./my-workflow --mcp-servers ./servers.json
 These are not style rules; the parser or lint rejects them, and each one is easy
 to write by accident.
 
-- **A step inside a branch is not visible after it.** An `output:` produced in a
-  condition's `then:` or `else:`, or inside a `for_each` or a `parallel` branch,
-  cannot be referenced by a step after the fork: that branch might not have run.
-  Lint says `ref/unknown-producer`. Reference something the pipeline itself
-  produced instead.
+- **A condition's branches are invisible after the fork.** An `output:` produced
+  inside `then:` or `else:` cannot be referenced by a step after the condition,
+  because that branch might not have run. Lint says `ref/unknown-producer`.
+  Parallel branches and `for_each` are not restricted this way - see below.
 - **`on_blocking: { goto: … }` stays in its own lane.** From inside a branch it
   can only target a step in that branch. Naming a step in the enclosing pipeline
   is rejected outright, not warned about.
