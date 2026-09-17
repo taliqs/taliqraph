@@ -15,6 +15,7 @@ import { CLAUDE_MODELS, resolveClaudeModelId } from './claude-models';
 import { effortToThinkingTokens } from './effort-to-thinking-tokens';
 import { readAuthStatus } from './read-auth-status';
 import { errorEventOf } from '../quota-error';
+import type { ToolPermissionDecision } from './tool-permission-policy';
 import { decideToolPermission } from './tool-permission-policy';
 import { translateSdkMessage } from './translate-sdk-message';
 
@@ -155,17 +156,22 @@ function buildQueryOptions(spec: EngineRunSpec, abort: AbortController): Record<
         if (granted) {
           return { behavior: 'allow' as const, updatedInput: input };
         }
-        return {
-          behavior: 'deny' as const,
-          message: `The user declined: ${decision.detail ?? toolName}. Continue without it.`,
-        };
+        return { behavior: 'deny' as const, message: refusal(decision, toolName) };
       }
-      return {
-        behavior: 'deny' as const,
-        message: decision.reason ?? 'Not permitted for this agent',
-      };
+      return { behavior: 'deny' as const, message: refusal(decision, toolName) };
     },
   };
+}
+
+/**
+ * What a refused call tells the model. The reason carries the allowlist, which
+ * is the thing it needs to choose another way - the old message dropped it and
+ * said only that someone declined, which left the model guessing and retrying
+ * variations of the same blocked command.
+ */
+function refusal(decision: ToolPermissionDecision, toolName: string): string {
+  const reason = decision.reason ?? `${toolName} is not permitted for this agent`;
+  return `Refused: ${reason}. Do not retry it or route around it with another command. If you cannot finish without it, say so in your report and do what you can without it.`;
 }
 
 function toSdkUserMessage(text: string): Record<string, unknown> {

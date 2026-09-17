@@ -99,6 +99,35 @@ describe('AnthropicEngine', () => {
 
     const rm = await canUseTool('Bash', { command: 'rm -rf /' });
     expect(rm.behavior).toBe('deny');
+    // the refusal has to carry the allowlist and what to do instead, or the
+    // model just tries another spelling of the same blocked command
+    expect(rm.message).toContain('rm -rf');
+    expect(rm.message).toContain('allowed:');
+    expect(rm.message).toContain('say so in your report');
+  });
+
+  it('tells a refused escalation why, not just that someone said no', async () => {
+    const asked: string[] = [];
+    const { fn, captured } = fakeQuery([{ type: 'result', subtype: 'success', result: '' }]);
+    const session = new AnthropicEngine({ queryFn: fn }).startSession({
+      ...spec,
+      onPermissionRequest: async ({ detail }) => {
+        asked.push(detail);
+        return false; // what a headless run does
+      },
+    });
+    await collect(session.events());
+    const canUseTool = captured[0]?.options['canUseTool'] as (
+      toolName: string,
+      input: Record<string, unknown>,
+    ) => Promise<{ behavior: string; message?: string }>;
+
+    const denied = await canUseTool('Bash', { command: 'python3 -c "import json"' });
+    expect(asked).toEqual(['python3 -c "import json"']);
+    expect(denied.behavior).toBe('deny');
+    expect(denied.message).toContain('python3');
+    expect(denied.message).toContain('allowed:');
+    expect(denied.message).toContain('say so in your report');
   });
 
   it('feeds the initial user message and later send() calls into the prompt stream', async () => {
