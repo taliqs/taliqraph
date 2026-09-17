@@ -423,6 +423,7 @@ to write by accident.
 taliqraph ./my-workflow --input question="what changed?"   # gates in the terminal
 taliqraph -p ./my-workflow --input question="what changed?" # headless, for CI
 taliqraph lint ./my-workflow                                # check without running
+taliqraph --no-stream ./my-workflow                         # no live typing in the feed
 ```
 
 Exit codes: 0 finished, 1 failed, 2 the workflow is wrong (usage, a lint problem,
@@ -444,6 +445,11 @@ const result = await runWorkflow({
   onGate: async (gate) => ({ approved: true }),
 });
 ```
+
+Agents stream their prose back as they write it, as `agent-text-partial` events,
+which is what a live feed renders. A host that shows no live typing should turn
+that off - `streamText: false`, or `--no-stream` on the CLI. The finished
+`agent-text` still arrives either way, so nothing about the result changes.
 
 `taliqraph/definitions` is the browser-safe half: the model and the linter, with
 no Node behind it.
