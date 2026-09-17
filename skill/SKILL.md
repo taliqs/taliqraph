@@ -38,6 +38,29 @@ my-workflow/
 Copying the folder copies everything. `taliqraph pack <folder>` turns it into one
 `.tqh` file, and `taliqraph unpack` reverses that.
 
+### Where the folder lives
+
+The CLI runs a package folder wherever it is: `taliqraph ./anywhere/my-workflow`
+works, and nothing has to be installed anywhere.
+
+The desktop app and the shared Library are different. They read a **definitions
+root** and expect this layout inside it:
+
+```
+.taliqraph/
+  workflows/<name>/workflow.yaml   the packages
+  agents/  scripts/  standards/  skills/   shared by all of them
+```
+
+There are two such roots: `~/.taliqraph` is the Library, shared by every folder,
+and `<project>/.taliqraph` is one project's own, which shadows it. So a workflow
+meant for the desktop belongs at `<project>/.taliqraph/workflows/<name>/`.
+
+Open the **project** in the desktop app, not the `.taliqraph` folder and not
+`workflows/`: it appends `.taliqraph` to whatever you opened, so opening the
+definitions folder itself makes it look for `.taliqraph/.taliqraph` and find
+nothing.
+
 ## References are the whole idea
 
 Every step writes its result under its own id, and under `output:` when it names
@@ -88,6 +111,11 @@ steps:
 
 Input types are `text`, `prompt`, `number`, `boolean` and `choice`. A plain value
 is shorthand: `question: ''` is required text.
+
+**An input's name is lowercase letters, digits and underscores, starting with a
+letter**: `test_hash`, not `testHash`. The rule is enforced at parse time. Report
+fields are not held to it, so `matrix.topReason` is fine while `inputs.topReason`
+is not.
 
 Secrets are **names, never values**. A `?` marks one optional. They arrive from
 `--secret NAME=value` or the environment, and are redacted from the event log. A
@@ -373,8 +401,10 @@ taliqraph -p ./my-workflow --input question="what changed?" # headless, for CI
 taliqraph lint ./my-workflow                                # check without running
 ```
 
-Exit codes: 0 finished, 1 failed, 2 usage or lint problems, 3 stopped at a gate,
-4 over budget, 130 interrupted.
+Exit codes: 0 finished, 1 failed, 2 the workflow is wrong (usage, a lint problem,
+or a package that will not load), 3 stopped at a gate, 4 over budget, 130
+interrupted. 1 and 2 are the distinction worth wiring into CI: 2 means fix the
+workflow, 1 means it ran and did not succeed.
 
 From Node, the same package is a library:
 

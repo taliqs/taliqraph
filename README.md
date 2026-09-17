@@ -175,7 +175,7 @@ secrets: [GH_TOKEN, JIRA_TOKEN?]
 env: [HTTP_PROXY]
 ```
 
-Input types are `text`, `prompt`, `number`, `boolean` and `choice`. Steps read them as `inputs.<name>`. A plain value instead of a spec is shorthand: `question: ''` is required text.
+Input types are `text`, `prompt`, `number`, `boolean` and `choice`. Steps read them as `inputs.<name>`. A plain value instead of a spec is shorthand: `question: ''` is required text. An input's name is lowercase letters, digits and underscores, starting with a letter - `test_hash`, not `testHash`.
 
 Secrets are names, never values. A `?` marks one as optional. They come from `--secret NAME=value` or the process environment, and reach only the steps that list them under `secrets:`. A run refuses to start when a required one is missing. Values are redacted from the event log.
 
@@ -326,14 +326,14 @@ The binary is `taliqraph`, and `tq` is the same thing.
 
 Interactive by default: a gate, a question or a permission ask opens a menu in the terminal. Without a terminal, the first pause fails the run and points at `-p`.
 
-| Exit code | Meaning                |
-| --------- | ---------------------- |
-| 0         | the run finished       |
-| 1         | the run failed         |
-| 2         | usage or lint problems |
-| 3         | stopped at a gate      |
-| 4         | over budget            |
-| 130       | interrupted            |
+| Exit code | Meaning                                                                       |
+| --------- | ----------------------------------------------------------------------------- |
+| 0         | the run finished                                                              |
+| 1         | the run failed                                                                |
+| 2         | the workflow is wrong: usage, a lint problem, or a package that will not load |
+| 3         | stopped at a gate                                                             |
+| 4         | over budget                                                                   |
+| 130       | interrupted                                                                   |
 
 An MCP servers file looks like this:
 

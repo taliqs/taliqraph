@@ -61,7 +61,7 @@ function parseInputDeclarations(
     const at = `inputs.${name}`;
     if (!INPUT_NAME_PATTERN.test(name)) {
       issues.push(
-        `${at}: an input is named like an identifier (prompt, pr, target_branch) - steps read it as inputs.${name}`,
+        `${at}: an input's name is lowercase letters, digits and underscores, starting with a letter (prompt, pr, target_branch) - steps read it as inputs.${name}`,
       );
       continue;
     }

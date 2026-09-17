@@ -59,7 +59,17 @@ export async function lintCommand(
   const mcpServers = options.mcpServers
     ? (await readMcpServersFile(options.mcpServers, context.cwd)).map((server) => server.name)
     : [];
-  const linted = await lintPackage(source, { mcpServers });
+  // A package that will not load is the worst thing lint can find, not an
+  // unexpected failure: it exits 2 like every other lint problem, so a CI job can
+  // tell a broken workflow from a workflow that ran and failed.
+  let linted;
+  try {
+    linted = await lintPackage(source, { mcpServers });
+  } catch (cause) {
+    context.out.error(cause instanceof Error ? cause.message : String(cause));
+    process.exitCode = EXIT.problems;
+    return;
+  }
   const report: LintReport = {
     workflow: linted.name,
     result: linted.lint,
