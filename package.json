@@ -1,6 +1,6 @@
 {
   "name": "taliqraph",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Run workflows made of AI agents, scripts and approval gates, defined as plain files. A CLI, a programmatic API, and a SKILL.md that teaches your own agent the format.",
   "keywords": [
     "ai",
