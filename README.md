@@ -276,9 +276,9 @@ The contract, for both script definitions and inline commands:
 | `TQ_ARG_<n>`, `TQ_INPUT_<NAME>` | the same values as environment variables, strings raw, everything else JSON                         |
 | `$TQ_WORKSPACE`                 | the folder the run works in, which is also the working directory                                    |
 | `$TQ_SCRIPT_DIR`                | the script's own folder, for files that ship with it                                                |
-| `$TQ_REPORT_FILE`               | write the report here instead of printing it                                                        |
+| `$TQ_REPORT_FILE`               | write the report here; it wins over anything printed                                                |
 
-The report is the file at `$TQ_REPORT_FILE`, else the last JSON line on stdout. Anything else is kept as `{ output: "<text>" }` and the step says so, so print `JSON.stringify(...)` when later steps read fields. A definition's `run` is spawned without a shell, so quoting behaves the same everywhere; inline commands go through the shell.
+The report is the file at `$TQ_REPORT_FILE`, else the last JSON line on stdout - a script that does both gets the file, and stdout is read only when the file is missing, empty or not valid JSON. Anything else is kept as `{ output: "<text>" }` and the step says so, so print `JSON.stringify(...)` when later steps read fields. A definition's `run` is spawned without a shell, so quoting behaves the same everywhere; inline commands go through the shell.
 
 ## Standards and skills
 

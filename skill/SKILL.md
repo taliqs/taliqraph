@@ -346,13 +346,18 @@ What the script is given:
 | `TQ_ARG_<n>`, `TQ_INPUT_<NAME>` | the same values as environment variables                                        |
 | `$TQ_WORKSPACE`                 | the folder the run works in, which is also the working directory                |
 | `$TQ_SCRIPT_DIR`                | the script's own folder, for files that ship with it                            |
-| `$TQ_REPORT_FILE`               | write the report here instead of printing it                                    |
+| `$TQ_REPORT_FILE`               | write the report here; it wins over anything printed                            |
 
-**The output is the last JSON line the script prints**, or the file at
-`$TQ_REPORT_FILE` when it writes one. Anything else it prints is kept as
-`{ output: "<text>" }` and the step says so. This is the single most common
-mistake: `console.log({ passed: 3 })` prints `[object Object]` and reports
-nothing. Write `console.log(JSON.stringify({ passed: 3 }))`.
+**The output is the file at `$TQ_REPORT_FILE`, and the last JSON line the script
+prints when there is no such file.** When a script does both, the file wins -
+worth knowing before a debug `console.log(JSON.stringify(...))` goes in beside a
+`writeFileSync`, because it will be ignored. Stdout takes over only when the file
+is missing, empty, or not valid JSON.
+
+Anything else it prints is kept as `{ output: "<text>" }` and the step says so.
+This is the single most common mistake: `console.log({ passed: 3 })` prints
+`[object Object]` and reports nothing. Write
+`console.log(JSON.stringify({ passed: 3 }))`.
 
 A definition's `run` is spawned without a shell, so quoting behaves the same
 everywhere. An inline `script: npm test` goes through the shell instead.
