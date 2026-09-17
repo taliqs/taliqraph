@@ -26,6 +26,13 @@ export interface RunWorkflowOptions {
   readonly cwd?: string;
   /** True when `cwd` is a copy the host made for this run: agents are told to stay inside it. */
   readonly isolated?: boolean;
+  /**
+   * Whether agents stream their prose back as they write it, as
+   * `agent-text-partial` events. Default true. A host that does not show live
+   * typing gains nothing from them: turn it off and the finished `agent-text`
+   * still arrives, unchanged.
+   */
+  readonly streamText?: boolean;
   /** Shell commands to run in the workspace after each top-level step and after the run. */
   readonly hooks?: HooksConfig;
   /** Default: the Anthropic engine. */

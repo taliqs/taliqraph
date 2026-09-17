@@ -39,6 +39,20 @@ async function collect(events: AsyncIterable<EngineEvent>): Promise<EngineEvent[
 }
 
 describe('AnthropicEngine', () => {
+  it('asks for partial messages unless the host says it shows none', async () => {
+    const on = fakeQuery([{ type: 'result', subtype: 'success', result: '' }]);
+    await collect(new AnthropicEngine({ queryFn: on.fn }).startSession(spec).events());
+    expect(on.captured[0]?.options?.['includePartialMessages']).toBe(true);
+
+    const off = fakeQuery([{ type: 'result', subtype: 'success', result: '' }]);
+    await collect(
+      new AnthropicEngine({ queryFn: off.fn })
+        .startSession({ ...spec, streamText: false })
+        .events(),
+    );
+    expect(off.captured[0]?.options?.['includePartialMessages']).toBe(false);
+  });
+
   it('maps the run spec onto SDK options', async () => {
     const { fn, captured } = fakeQuery([{ type: 'result', subtype: 'success', result: '' }]);
     const session = new AnthropicEngine({ queryFn: fn }).startSession(spec);

@@ -21,6 +21,8 @@ export interface RunOptions {
   /** `--mcp-servers <file>`: the servers to offer the agents. */
   readonly mcpServersFile?: string;
   readonly verbose?: boolean;
+  /** False turns off live typing: no partial text from the engine. */
+  readonly stream?: boolean;
   readonly outputFormat: OutputFormat;
   /** `-p`: nobody is watching, so gates answer themselves and over budget exits 4. */
   readonly print: boolean;
@@ -60,6 +62,7 @@ export async function runCommand(
       mcpServers: options.mcpServersFile
         ? await readMcpServersFile(options.mcpServersFile, options.cwd ?? process.cwd())
         : [],
+      ...(options.stream === false ? { streamText: false } : {}),
       ...(options.secrets ? { secrets: options.secrets } : {}),
       ...(options.env ? { env: options.env } : {}),
       signal: controller.signal,

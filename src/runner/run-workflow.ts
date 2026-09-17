@@ -76,6 +76,7 @@ export async function runWorkflow(options: RunWorkflowOptions): Promise<RunResul
     projectId: cwd,
     workspacePath: cwd,
     ...(options.isolated ? { isolated: true } : {}),
+    ...(options.streamText === false ? { streamText: false } : {}),
     inputs: inputs.values,
     secrets: secrets.values,
     env,

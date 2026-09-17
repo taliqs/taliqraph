@@ -44,6 +44,8 @@ export interface TaskRunContext {
   readonly workspacePath: string;
   /** True when the workspace is a copy the host made for this run, not the folder itself. */
   readonly isolated?: boolean;
+  /** False turns off live typing: no `agent-text-partial`, the finished text unchanged. */
+  readonly streamText?: boolean;
   /** The declared inputs, resolved - steps read them as `inputs.<name>`. */
   readonly inputs: Readonly<Record<string, unknown>>;
   /**

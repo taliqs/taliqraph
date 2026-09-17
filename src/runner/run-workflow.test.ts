@@ -1,6 +1,7 @@
 import { mkdir, mkdtemp, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import type { EngineRunSpec } from '../engines/engine-adapter';
 import type { EngineEvent } from '../engines/engine-event';
 import { EngineRegistry } from '../engines/engine-registry';
 import { MockEngine } from '../engines/mock/mock-engine';
@@ -78,7 +79,44 @@ steps:
 
 const types = (events: readonly RunEvent[]): string[] => events.map((event) => event.type);
 
+/** A mock engine that keeps every spec it was started with. */
+class SpyEngine extends MockEngine {
+  readonly specs: EngineRunSpec[] = [];
+  override startSession(spec: EngineRunSpec): ReturnType<MockEngine['startSession']> {
+    this.specs.push(spec);
+    return super.startSession(spec);
+  }
+}
+
 describe('runWorkflow', () => {
+  it('passes streamText through to the engine, and leaves it alone by default', async () => {
+    const { cwd, pkg } = await fixture(ONE_STEP);
+    const quiet = new SpyEngine();
+    const quietRegistry = new EngineRegistry();
+    quietRegistry.register(quiet);
+    await runWorkflow({
+      workflow: pkg,
+      inputs: { prompt: 'Do the thing' },
+      cwd,
+      engines: quietRegistry,
+      headless: true,
+      streamText: false,
+    });
+    expect(quiet.specs[0]?.streamText).toBe(false);
+
+    const loud = new SpyEngine();
+    const loudRegistry = new EngineRegistry();
+    loudRegistry.register(loud);
+    await runWorkflow({
+      workflow: pkg,
+      inputs: { prompt: 'Do the thing' },
+      cwd,
+      engines: loudRegistry,
+      headless: true,
+    });
+    expect(loud.specs[0]?.streamText).toBeUndefined();
+  });
+
   it('runs a one-step agent workflow headless and returns its output, metrics and exit code', async () => {
     const { cwd, pkg } = await fixture(ONE_STEP);
     const seen: TimedRunEvent[] = [];

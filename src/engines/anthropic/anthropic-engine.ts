@@ -140,7 +140,8 @@ function buildQueryOptions(spec: EngineRunSpec, abort: AbortController): Record<
     // Agents are fully defined by their Taliqraph definition - never by
     // whatever CLAUDE.md / settings happen to exist on this machine.
     settingSources: [],
-    includePartialMessages: true, // live typing in the task feed
+    // live typing in the task feed; off when the host says it shows none
+    includePartialMessages: spec.streamText !== false,
     abortController: abort,
     canUseTool: async (toolName: string, input: Record<string, unknown>) => {
       const decision = decideToolPermission(toolName, input, spec);

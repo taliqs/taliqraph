@@ -17,6 +17,8 @@ interface RootOptions extends GlobalOptions {
   readonly inputs?: string;
   readonly mcpServers?: string;
   readonly verbose?: boolean;
+  /** commander's `--no-stream`: true unless the flag is given. */
+  readonly stream?: boolean;
   readonly outputFormat: string;
   readonly secret: readonly string[];
   readonly env: readonly string[];
@@ -63,6 +65,10 @@ export function buildProgram(): Command {
     )
     .option('--output-format <format>', OUTPUT_FORMATS.join(' | '), 'text')
     .option('--verbose', 'agent prose and tool calls in the feed')
+    .option(
+      '--no-stream',
+      "do not stream an agent's prose as it writes; the finished text still arrives",
+    )
     .argument(
       '[workflow]',
       'the workflow to run: a package folder or a bundle file; gates are answered here unless -p',
@@ -111,6 +117,7 @@ export function buildProgram(): Command {
           ...(options.cwd ? { cwd: options.cwd } : {}),
           ...(options.mcpServers ? { mcpServersFile: options.mcpServers } : {}),
           ...(options.verbose ? { verbose: true } : {}),
+          ...(options.stream === false ? { stream: false } : {}),
           secrets,
           env,
         },

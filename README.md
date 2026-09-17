@@ -315,18 +315,19 @@ taliqraph doctor                   # engines, sign-ins, node
 
 The binary is `taliqraph`, and `tq` is the same thing.
 
-| Run option                   | What it does                                                          |
-| ---------------------------- | --------------------------------------------------------------------- |
-| `-i, --input <name=value>`   | one declared input, repeat per input                                  |
-| `--inputs <json\|file>`      | every input at once, as a JSON object or a path to one                |
-| `-p, --print`                | headless: gates answer themselves, over budget exits 4                |
-| `--secret <NAME=value>`      | a secret for this run only, never stored                              |
-| `--env <NAME=value>`         | a host variable for the workflow's `env:` pass-through                |
-| `--mcp-servers <file>`       | MCP servers the agents may use, a JSON array of `{ name, kind, ... }` |
-| `--cwd <folder>`             | the folder to work in, default the current one                        |
-| `--output-format <fmt>`      | `text`, `json`, or `stream-json` for one event per line               |
-| `--verbose`                  | agent prose and tool calls in the feed                                |
-| `--json`, `--no-color`, `-q` | machine-readable output, plain output, results only                   |
+| Run option                   | What it does                                                             |
+| ---------------------------- | ------------------------------------------------------------------------ |
+| `-i, --input <name=value>`   | one declared input, repeat per input                                     |
+| `--inputs <json\|file>`      | every input at once, as a JSON object or a path to one                   |
+| `-p, --print`                | headless: gates answer themselves, over budget exits 4                   |
+| `--secret <NAME=value>`      | a secret for this run only, never stored                                 |
+| `--env <NAME=value>`         | a host variable for the workflow's `env:` pass-through                   |
+| `--mcp-servers <file>`       | MCP servers the agents may use, a JSON array of `{ name, kind, ... }`    |
+| `--cwd <folder>`             | the folder to work in, default the current one                           |
+| `--output-format <fmt>`      | `text`, `json`, or `stream-json` for one event per line                  |
+| `--verbose`                  | agent prose and tool calls in the feed                                   |
+| `--no-stream`                | no live typing: the agent's prose arrives finished, not as it is written |
+| `--json`, `--no-color`, `-q` | machine-readable output, plain output, results only                      |
 
 Interactive by default: a gate, a question or a permission ask opens a menu in the terminal. Without a terminal, the first pause fails the run and points at `-p`.
 
@@ -376,22 +377,23 @@ console.log(result.status, result.summary);
 console.log(result.metrics.costUsd, result.metrics.tokens.total);
 ```
 
-| Option       | Default              | What it is                                                               |
-| ------------ | -------------------- | ------------------------------------------------------------------------ |
-| `workflow`   | required             | a package folder or a `.tqh` file                                        |
-| `inputs`     | `{}`                 | values for the inputs the workflow declares                              |
-| `secrets`    | the environment      | values for the secrets it declares                                       |
-| `env`        | the environment      | host variables for its `env:` pass-through                               |
-| `cwd`        | the process cwd      | the folder the run works in                                              |
-| `isolated`   | false                | true when `cwd` is a copy you made, so agents are told to stay inside it |
-| `hooks`      | none                 | `{ afterStep, afterTask }` shell commands run in the workspace           |
-| `engines`    | the Anthropic engine | the engine registry to use                                               |
-| `mcpServers` | none                 | resolved MCP servers the agents may name                                 |
-| `onEvent`    | none                 | every event as it happens, timestamped                                   |
-| `onGate`     | none                 | answers every pause                                                      |
-| `headless`   | false                | answer every pause automatically, the way `-p` does                      |
-| `signal`     | none                 | aborting cancels the run                                                 |
-| `resumeFrom` | none                 | the events of an earlier run, to continue it                             |
+| Option       | Default              | What it is                                                                            |
+| ------------ | -------------------- | ------------------------------------------------------------------------------------- |
+| `workflow`   | required             | a package folder or a `.tqh` file                                                     |
+| `inputs`     | `{}`                 | values for the inputs the workflow declares                                           |
+| `secrets`    | the environment      | values for the secrets it declares                                                    |
+| `env`        | the environment      | host variables for its `env:` pass-through                                            |
+| `cwd`        | the process cwd      | the folder the run works in                                                           |
+| `isolated`   | false                | true when `cwd` is a copy you made, so agents are told to stay inside it              |
+| `hooks`      | none                 | `{ afterStep, afterTask }` shell commands run in the workspace                        |
+| `engines`    | the Anthropic engine | the engine registry to use                                                            |
+| `mcpServers` | none                 | resolved MCP servers the agents may name                                              |
+| `streamText` | true                 | agents stream their prose as `agent-text-partial`; false sends only the finished text |
+| `onEvent`    | none                 | every event as it happens, timestamped                                                |
+| `onGate`     | none                 | answers every pause                                                                   |
+| `headless`   | false                | answer every pause automatically, the way `-p` does                                   |
+| `signal`     | none                 | aborting cancels the run                                                              |
+| `resumeFrom` | none                 | the events of an earlier run, to continue it                                          |
 
 The result:
 

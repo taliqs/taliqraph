@@ -249,6 +249,7 @@ function buildRunSpec(
     cwd: context.workspacePath,
     allowWrite: agent.tools.write !== 'off',
     allowNetwork: agent.tools.network !== 'off',
+    ...(context.streamText === false ? { streamText: false } : {}),
     commandAllowlist: agent.tools.commands === 'off' ? [] : agent.tools.commandAllowlist,
     ...(mcpServers.length > 0 ? { mcpServers } : {}),
     ...(env ? { env } : {}),

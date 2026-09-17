@@ -49,6 +49,8 @@ export interface EngineRunSpec {
   readonly allowWrite: boolean;
   /** Agent's network knob: WebSearch/WebFetch allowed when true. */
   readonly allowNetwork?: boolean;
+  /** False asks the engine not to send partial text; the finished text still arrives. Default true. */
+  readonly streamText?: boolean;
   readonly commandAllowlist: readonly string[];
   /**
    * The session process's whole environment: the clean base, the
